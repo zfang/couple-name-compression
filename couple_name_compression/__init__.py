@@ -28,10 +28,8 @@ def load_name_db():
     return name_db
 
 
-def get_prefix(original_name, names_dict, end_with_vowel=False):
-    original_name = original_name.lower()
-    name = None
-    cost = len(names_dict)
+def get_prefixes(original_name, names_dict, end_with_vowel=False):
+    names = []
 
     for i in range(1, len(original_name)):
         candidate = original_name[:-i]
@@ -42,21 +40,17 @@ def get_prefix(original_name, names_dict, end_with_vowel=False):
             continue
 
         current_cost = 0
-        for key in names_dict.keys():
-            if key.startswith(candidate):
-                current_cost += 1
+        for key, data in names_dict.items():
+            if key != original_name and key.startswith(candidate):
+                current_cost += data['freq_percentage']
 
-        if current_cost <= cost:
-            name = candidate
-            cost = current_cost
+        names.append((candidate, current_cost))
 
-    return name
+    return names
 
 
-def get_suffix(original_name, names_dict, start_with_vowel=False):
-    original_name = original_name.lower()
-    name = None
-    cost = len(names_dict)
+def get_suffixes(original_name, names_dict, start_with_vowel=False):
+    names = []
 
     for i in range(1, len(original_name)):
         candidate = original_name[i:]
@@ -67,30 +61,31 @@ def get_suffix(original_name, names_dict, start_with_vowel=False):
             continue
 
         current_cost = 0
-        for key in names_dict.keys():
-            if key.endswith(candidate):
-                current_cost += 1
+        for key, data in names_dict.items():
+            if key != original_name and key.endswith(candidate):
+                current_cost += data['freq_percentage']
 
-        if current_cost <= cost:
-            name = candidate
-            cost = current_cost
+        names.append((candidate, current_cost))
 
-    return name
+    return names
 
 
-def compute_reconstruction_cost(compressed_name, prefix_dict, suffix_dict):
-    compressed_name = compressed_name.lower()
+def compute_reconstruction_cost(compressed_name, name1, name2, prefix_dict, suffix_dict):
     tuples = []
 
     for i in range(1, len(compressed_name)):
         prefix = compressed_name[:i]
-        possible_names_with_prefix = [key for key in prefix_dict.keys() if key.startswith(prefix)]
+        possible_names_with_prefix = [(key, data['freq_percentage'])
+                                      for key, data in prefix_dict.items()
+                                      if key != name1 and key.startswith(prefix)]
         suffix = compressed_name[i:]
-        possible_names_with_suffix = [key for key in suffix_dict.keys() if key.endswith(suffix)]
+        possible_names_with_suffix = [(key, data['freq_percentage'])
+                                      for key, data in suffix_dict.items()
+                                      if key != name2 and key.endswith(suffix)]
 
-        for p in possible_names_with_prefix:
-            for s in possible_names_with_suffix:
-                tuples.append((p, s))
+        for p, freq1 in possible_names_with_prefix:
+            for s, freq2 in possible_names_with_suffix:
+                tuples.append((p, s, freq1 * freq2))
 
     return tuples
 
