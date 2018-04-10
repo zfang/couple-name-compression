@@ -1,7 +1,7 @@
 import argparse
 import json
-from operator import itemgetter
 from collections import OrderedDict
+from operator import itemgetter
 
 from couple_name_compression import get_prefix, get_suffix, load_name_db, compute_reconstruction_cost
 
@@ -21,7 +21,11 @@ for key1, key2 in [('female', 'male'), ('male', 'female')]:
     db2 = name_db[key2]
     names = []
     for arg1, arg2 in [(True, False), (False, True), (True, True)]:
-        name = (get_prefix(args.__dict__[key1], db1, end_with_vowel=arg1) + get_suffix(args.__dict__[key2], db2, start_with_vowel=arg2)).capitalize()
+        prefix = get_prefix(args.__dict__[key1], db1, end_with_vowel=arg1)
+        suffix = get_suffix(args.__dict__[key2], db2, start_with_vowel=arg2)
+        if prefix is None or suffix is None:
+            continue
+        name = (prefix + suffix).capitalize()
         names.append(OrderedDict({
             'name': name,
             'reconstruction_cost': len(compute_reconstruction_cost(name, db1, db2)),

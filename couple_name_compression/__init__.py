@@ -11,6 +11,8 @@ FILES = {
 
 vowels = 'aeiouy'
 
+digraphs = ('ch', 'sh', 'th', 'wh', 'ph')
+
 
 def load_name_db():
     name_db = defaultdict(OrderedDict)
@@ -36,6 +38,9 @@ def get_prefix(original_name, names_dict, end_with_vowel=False):
         if end_with_vowel != ends_with_vowel(candidate):
             continue
 
+        if original_name[-i - 1:-i + 1 or len(original_name)] in digraphs:
+            continue
+
         current_cost = 0
         for key in names_dict.keys():
             if key.startswith(candidate):
@@ -56,6 +61,9 @@ def get_suffix(original_name, names_dict, start_with_vowel=False):
     for i in range(1, len(original_name)):
         candidate = original_name[i:]
         if start_with_vowel != starts_with_vowel(candidate):
+            continue
+
+        if original_name[i - 1:i + 1] in digraphs:
             continue
 
         current_cost = 0
