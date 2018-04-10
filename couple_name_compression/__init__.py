@@ -19,9 +19,9 @@ def load_name_db():
             for line in f:
                 name, freq_percentage, cumulative_freq_percentage, rank = line.split()
                 name_db[key][name.lower()] = {
-                    'freq_percentage': freq_percentage,
-                    'cumulative_freq_percentage': cumulative_freq_percentage,
-                    'rank': rank,
+                    'freq_percentage': float(freq_percentage),
+                    'cumulative_freq_percentage': float(cumulative_freq_percentage),
+                    'rank': int(rank),
                 }
     return name_db
 
