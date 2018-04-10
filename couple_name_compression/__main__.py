@@ -1,5 +1,6 @@
 import argparse
 import json
+from operator import itemgetter
 from collections import OrderedDict
 
 from couple_name_compression import get_prefix, get_suffix, load_name_db, compute_reconstruction_cost
@@ -25,6 +26,7 @@ for key1, key2 in [('female', 'male'), ('male', 'female')]:
             'name': name,
             'reconstruction_cost': len(compute_reconstruction_cost(name, db1, db2)),
         }))
+    names = sorted(names, key=itemgetter('reconstruction_cost'))
     result[result_key] = names
 
 print(json.dumps(result, indent=4))
