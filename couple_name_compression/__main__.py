@@ -23,7 +23,7 @@ for key1, key2 in [('female', 'male'), ('male', 'female')]:
         name = (get_prefix(args.__dict__[key1], db1, end_with_vowel=arg1) + get_suffix(args.__dict__[key2], db2, start_with_vowel=arg2)).capitalize()
         names.append(OrderedDict({
             'name': name,
-            #'reconstruction_cost': compute_reconstruction_cost(name, db1, db2),
+            'reconstruction_cost': len(compute_reconstruction_cost(name, db1, db2)),
         }))
     result[result_key] = names
 

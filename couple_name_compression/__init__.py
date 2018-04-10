@@ -71,12 +71,13 @@ def get_suffix(original_name, names_dict, start_with_vowel=False):
 
 
 def compute_reconstruction_cost(compressed_name, prefix_dict, suffix_dict):
+    compressed_name = compressed_name.lower()
     tuples = []
 
     for i in range(1, len(compressed_name)):
-        prefix = compressed_name[i:]
+        prefix = compressed_name[:i]
         possible_names_with_prefix = [key for key in prefix_dict.keys() if key.startswith(prefix)]
-        suffix = compressed_name[:i]
+        suffix = compressed_name[i:]
         possible_names_with_suffix = [key for key in suffix_dict.keys() if key.endswith(suffix)]
 
         for p in possible_names_with_prefix:
