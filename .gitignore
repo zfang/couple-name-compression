@@ -1,0 +1,8 @@
+lib/
+bin/
+include/
+man/
+__pycache__/
+.Python
+.idea/
+pip-selfcheck.json
